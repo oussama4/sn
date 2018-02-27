@@ -1,0 +1,6 @@
+.bg {
+    background-image: url("../img/pexels-photo-207896.jpeg");
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: cover;
+}

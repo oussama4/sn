@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+  SocialNet Home
+{% endblock title %}
+
+{% block head %}
+            <ul class="navbar-nav offset-sm-10">
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Profile
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                    </li>
+                </ul>
+{% endblock head %}
+
+{% block body %}
+  <h1> Welcome to our boring empty feed </h1>
+{% endblock body %}

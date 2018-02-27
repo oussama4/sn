@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+  SocialNet
+{% endblock title %}
+
+{% block head %}
+    <ul class="navbar-nav offset-sm-9">
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Log in</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+        </div>
+    </ul>
+{% endblock head %}
+
+{% block body %}
+  <div class="bg"></div>
+{% endblock body %}

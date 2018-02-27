@@ -1,0 +1,89 @@
+{% extends "../feed/index.html" %}
+
+{% block title %}
+  Profile
+{% endblock title %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-xs-12 mt-5">
+        <div class="card">
+          <img src="{{profile_owner.profile.picture.url}}" 
+              alt="avatar" 
+              class="img-thumbnail rounded-circle img-fluid card-img-top"
+              width="200px">
+          <div class="card-body">
+            <div class="h4 card-title"> 
+              {{profile_owner.first_name}}  {{profile_owner.last_name}}
+            </div>
+            <div class="h5 card-subtitle mb-3 text-muted"> {{profile_owner.username}}</div>
+            <p class="card-text"> {{profile_owner.profile.bio}} </p>
+            <button type="button" class="btn btn-primary mt-5">
+              followers <span class="badge badge-light"> {{num_follow}} </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9 mt-5">
+        <ul class="nav nav-pills justify-content-end">
+          <li class="nav-item">
+            {% if same_user %}
+              <a href="#" class="nav-link active"> Edit Profile </a>
+            {% else %}
+              <a href="#" 
+                 class="nav-link active"
+                 id="followBtn"
+                 data-id="{{profile_owner.id}}"
+                 data-action="{% if request.user in profile_owner.profile.followers.all %}un{% endif %}follow"> 
+                 {% if request.user in profile_owner.profile.followers.all %}
+                    Unfollow
+                 {% else %}
+                    Follow
+                 {% endif %}
+              </a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock body %}
+
+{% block domready %}
+  var csrftoken = Cookies.get('csrftoken');
+  function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+  });
+
+  $('#followBtn').click(function (e) {
+    e.preventDefault();
+    $.post('{% url 'follow_user' %}',
+        {
+          id: $(this).data('id'),
+          action: $(this).data('action')
+        },
+        function (data) {
+          if (data['status'] === 'ok') {
+            var previous_action = $('#followBtn').data('action');
+            
+            // toggle data-action
+            $('#followBtn').data('action',
+            previous_action === 'follow' ? 'unfollow' : 'follow');
+            
+            // toggle link text
+            $('#followBtn').text(
+            previous_action === 'follow' ? 'Unfollow' : 'Follow');
+          }
+          console.log('response: ' + data);
+        });
+  });
+{% endblock domready %}
