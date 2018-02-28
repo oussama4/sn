@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, 
         related_name='is_following', blank=True)
-    avatar = models.ImageField(upload_to='avatars/%Y/%m/%d', blank=True)
+    avatar = models.ImageField(upload_to='avatars/%Y/%m/%d', default='avatars/default/download.jpeg')
     bio = models.TextField(blank=True)
 
     objects = UserManager()
@@ -72,6 +72,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
+
+    def __str__(self):
+        return self.get_full_name()
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
