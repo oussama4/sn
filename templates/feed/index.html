@@ -20,5 +20,22 @@
 {% endblock head %}
 
 {% block body %}
-  <h1> Welcome to our boring empty feed </h1>
+    <div class="container">
+        <div class="row" id="post">
+            <form class="sticky-top col-xs-6 offset-sm-3">
+                <textarea id="post_t" cols="50" rows="3" class="form-control mt-4" 
+                          placeholder="what do you want to say?" v-model="post_text"></textarea>
+                <div class="row mt-1">
+                    <div class="col">
+                        <label for="post_i" class="btn btn-outline-info">Select an image...</label>
+                        <input type="file" accept=".jpg, .jpeg, .png" @change="onFileChanged"
+                               class="input-file" name="post_image" id="post_i">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline-info btn-block" @click="onUpload"> Post </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock body %}
