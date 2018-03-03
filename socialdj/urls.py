@@ -24,7 +24,8 @@ admin.site.site_title = _('SocialDJ site admin')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls'))
+    path('', include('accounts.urls')),
+    path('', include('feed.urls')),
 ]
 
 if settings.DEBUG:

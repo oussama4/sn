@@ -13,15 +13,15 @@ new Vue({
       var formData = new FormData()
       formData.append('post_text', this.post_text)
       formData.append('post_image', this.selectedImage)
+      console.log('iamge:', this.selectedImage)
 
-      fetch('/feed/post', {
-        method: 'POST',
+      axios.post('/feed/post', formData, {
+        withCredentials: true,
         headers: {
-          'content-type': 'multipart/form-data',
-          'X-CSRFToken': csrftoken
-        },
-        body: formData
-      })
+          'X-CSRFToken': csrftoken,
+          'content-type': 'multipart/form-data'
+        }
+      }).then(res => console.log(res)).catch(err => console.log(err))
     }
   }
 })
