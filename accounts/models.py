@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
+from django.urls import reverse
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -83,6 +84,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         """Return the short name for the user."""
         return self.first_name
+
+    def get_absolute_url(self):
+        return reverse('accounts:profile', args=[self.pk])
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""

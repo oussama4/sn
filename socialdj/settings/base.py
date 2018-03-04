@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
     'crispy_forms',
     'accounts.apps.AccountsConfig',
     'feed.apps.FeedConfig'
@@ -143,3 +144,7 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'index'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+GRAPHENE = {
+    'SCHEMA': 'socialdj.schema.schema'
+}

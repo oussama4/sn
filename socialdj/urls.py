@@ -18,12 +18,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.utils.translation import gettext_lazy as _
+from graphene_django.views import GraphQLView
 
 admin.site.site_header = _('SocialDJ Administration')
 admin.site.site_title = _('SocialDJ site admin')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
     path('', include('accounts.urls')),
     path('', include('feed.urls')),
 ]

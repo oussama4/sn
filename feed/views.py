@@ -7,6 +7,12 @@ from django.contrib.contenttypes.models import ContentType
 
 from .models import Action, Post
 
+def index(request):
+    if request.user.is_authenticated:
+        return render(request, 'feed/index.html')
+    else:
+        return render(request, 'index.html')
+    
 @require_POST
 @login_required
 def post_action(request):

@@ -8,12 +8,6 @@ from django.http import JsonResponse
 from .forms import UserCreationForm
 from .models import User
 
-def index(request):
-    if request.user.is_authenticated:
-        return render(request, 'feed/index.html')
-    else:
-        return render(request, 'index.html')
-
 @login_required
 def profile(request, pk):
     profile_owner = get_object_or_404(User, id=pk)
