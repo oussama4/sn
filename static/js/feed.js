@@ -1,4 +1,4 @@
-new Vue({
+var postInput = new Vue({
   el: '#post',
   data: {
     post_text: '',
@@ -23,5 +23,47 @@ new Vue({
         }
       }).then(res => console.log(res)).catch(err => console.log(err))
     }
+  }
+})
+
+var feed = new Vue({
+  delimiters: ["[[", "]]"],
+  el: '#feed',
+  data: {
+    offset: 0,
+    actions: []
+  },
+  created () {
+    var query = `
+    query getActions{
+      actions(limit:10, offset:0){
+        id
+        verb
+        created
+        actor{
+          id
+          email
+          firstName
+          lastName
+          avatar
+        }
+        target{
+          id
+          text
+          image
+        }
+      }
+    }
+    `
+    var csrftoken = Cookies.get('csrftoken')
+    axios.post('graphql/', JSON.stringify({query: query}), {
+      withCredentials: true,
+      headers: {
+        'X-CSRFToken': csrftoken,
+        'content-type': 'application/json'
+      }
+    }).then(res => {
+      this.actions = res.data.data.actions
+    }).catch(err => console.log(err))
   }
 })
