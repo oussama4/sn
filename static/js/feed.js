@@ -52,6 +52,11 @@ var feed = new Vue({
           text
           image
         }
+        targetActor{
+          id
+          firstName
+          lastName
+        }
       }
     }
     `
@@ -63,7 +68,68 @@ var feed = new Vue({
         'content-type': 'application/json'
       }
     }).then(res => {
+      console.log(res.data)
       this.actions = res.data.data.actions
     }).catch(err => console.log(err))
+  },
+  methods: {
+    onLike (action) {
+      var query = `
+      mutation actCreate($input:ActionInput){
+        createAction(action:$input){
+          id
+          verb
+        }
+      }
+      `
+      var csrftoken = Cookies.get('csrftoken')
+      axios.post('graphql/', JSON.stringify({
+        query: query,
+        variables: {
+          input: {
+            verb: 'like',
+            post: action.target.id,
+            targetActor: action.actor.id
+          }
+        }
+      }), {
+        withCredentials: true,
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'content-type': 'application/json'
+        }
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => console.log(err))
+    },
+    onShare (action) {
+      var query = `
+      mutation actCreate($input:ActionInput){
+        createAction(action:$input){
+          id
+          verb
+        }
+      }
+      `
+      var csrftoken = Cookies.get('csrftoken')
+      axios.post('graphql/', JSON.stringify({
+        query: query,
+        variables: {
+          input: {
+            verb: 'share',
+            post: action.target.id,
+            targetActor: action.actor.id
+          }
+        }
+      }), {
+        withCredentials: true,
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'content-type': 'application/json'
+        }
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => console.log(err))
+    }
   }
 })

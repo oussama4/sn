@@ -39,18 +39,38 @@
         </div>
 
         <div id="feed" class="offset-sm-3" v-cloak>
-            <div v-for="(action,i) in actions" :key="i" class="media border bg-light w-75 p-3">
+            <div v-for="(action,i) in actions" :key="i" class="media border bg-light w-75 p-3 mb-3">
                 <img class="avatar-sm mr-3" :src="/media/ + action.actor.avatar" alt="">
                 <div class="media-body">
-                    <h5 class="text-primary">
-                        <a :href="/profile/ + action.actor.id"> 
-                            [[action.actor.firstName]] [[action.actor.lastName]] 
-                        </a>
-                    </h5>
+                        <h5 class="text-primary">
+                            <a :href="/profile/ + action.actor.id"> 
+                                [[action.actor.firstName]] [[action.actor.lastName]] 
+                            </a>
+                            <small v-if="action.verb=='like'" class="text-muted">
+                                likes 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                            <small v-if="action.verb=='share'" class="text-muted">
+                                shared 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                        </h5>
                     <p>
                         [[action.target.text]]
                     </p>
-                    <img class="img-fluid" :src="/media/ + action.target.image" alt="" v-if="action.target.image">
+                    <img class="img-fluid" :src="/media/ + action.target.image" 
+                         alt="" v-if="action.target.image">
+                    <div>
+                        <button class="btn btn-outline-info" @click="onLike(action)"> Like </button>
+                        <button class="btn btn-outline-info" @click="onShare(action)"> Share </button>
+                        <button class="btn btn-outline-info"> Comment </button>
+                    </div>
                 </div>
             </div>
         </div>

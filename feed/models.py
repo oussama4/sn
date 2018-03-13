@@ -19,6 +19,8 @@ class Action(models.Model):
         related_name='actions', db_index=True)
     verb = models.CharField(max_length=50)
     target = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
+    target_actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
