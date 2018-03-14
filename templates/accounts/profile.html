@@ -6,46 +6,58 @@
 
 {% block body %}
   <div class="container">
-    <div class="row">
-      <div class="col-md-3 col-xs-12 mt-5">
-        <div class="card">
+    <div class="row mt-4 bg-light">
+      <div class="col-xs-3 offset-sm-2 mr-3 mt-2">
           <img src="{{profile_owner.avatar.url}}" 
               alt="avatar" 
-              class="avatar img-fluid card-img-top"
+              class="avatar img-fluid"
               width="200px">
-          <div class="card-body">
-            <div class="h4 card-title"> 
-              {{profile_owner.first_name}}  {{profile_owner.last_name}}
-            </div>
-            <div class="h5 card-subtitle mb-3 text-muted"> {{profile_owner}}</div>
-            <p class="card-text"> {{profile_owner.bio}} </p>
-            <button type="button" class="btn btn-primary mt-5">
-              followers <span class="badge badge-light"> {{num_follow}} </span>
-            </button>
-          </div>
-        </div>
       </div>
-      <div class="col-md-9 mt-5">
-        <ul class="nav nav-pills justify-content-end">
+      <div class="col-xs-5 mt-3">
+          <div class="h2"> 
+              {{profile_owner.first_name}}  {{profile_owner.last_name}}
+          </div>
+          <div class="h6 text-muted ml-3 mb-5"> {{profile_owner.bio}} </div>
+          <p class="mb-3"> {{profile_owner.email}}</p>
+          <p> Joined {{profile_owner.date_joined}} </p>
+      </div>
+          {% if not same_user %}
+            <div class="col-sm-2 offset-sm-2 mt-3">
+                <a href="#" class="btn btn-outline-info" id="followBtn"
+                    data-id="{{profile_owner.id}}"
+                    data-action="{% if request.user in profile_owner.followers.all %}un{% endif %}follow"> 
+                    {% if request.user in profile_owner.followers.all %}
+                        Unfollow
+                    {% else %}
+                      Follow
+                    {% endif %}
+                </a>
+              </div>
+          {% endif %}
+    </div>
+
+      <ul class="nav nav-tabs nav-fill mt-3" id="myTab" role="tablist">
           <li class="nav-item">
-            {% if same_user %}
-              <a href="#" class="nav-link active"> Edit Profile </a>
-            {% else %}
-              <a href="#" 
-                 class="nav-link active"
-                 id="followBtn"
-                 data-id="{{profile_owner.id}}"
-                 data-action="{% if request.user in profile_owner.followers.all %}un{% endif %}follow"> 
-                 {% if request.user in profile_owner.followers.all %}
-                    Unfollow
-                 {% else %}
-                    Follow
-                 {% endif %}
-              </a>
-            {% endif %}
+            <a class="nav-link active" id="activity-tab" data-toggle="tab" href="#activity" role="tab" 
+               aria-controls="activity" aria-selected="true">Activity</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="foll0wers-tab" data-toggle="tab" href="#followers" role="tab" 
+               aria-controls="followers" aria-selected="false">Followers
+               <span class="badge badge-light"> {{num_follow}} </span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="following-tab" data-toggle="tab" href="#following" role="tab" 
+               aria-controls="following" aria-selected="false">Following</a>
           </li>
         </ul>
-      </div>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="activity" role="tabpanel" 
+               aria-labelledby="activity-tab">...</div>
+          <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">...</div>
+          <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">...</div>
+        </div>
+
     </div>
   </div>
 {% endblock body %}

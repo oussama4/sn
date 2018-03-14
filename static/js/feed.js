@@ -31,6 +31,7 @@ var feed = new Vue({
   el: '#feed',
   data: {
     offset: 0,
+    limit: 10,
     actions: []
   },
   created () {
@@ -73,26 +74,37 @@ var feed = new Vue({
     }).catch(err => console.log(err))
   },
   methods: {
-    onLike (action) {
+    fetchActions: function () {
+      this.offset += 10
+      this.limit += 10
       var query = `
-      mutation actCreate($input:ActionInput){
-        createAction(action:$input){
+      query getActions{
+        actions(limit:${this.limit}, offset:${this.offset}){
           id
           verb
+          created
+          actor{
+            id
+            email
+            firstName
+            lastName
+            avatar
+          }
+          target{
+            id
+            text
+            image
+          }
+          targetActor{
+            id
+            firstName
+            lastName
+          }
         }
       }
       `
       var csrftoken = Cookies.get('csrftoken')
-      axios.post('graphql/', JSON.stringify({
-        query: query,
-        variables: {
-          input: {
-            verb: 'like',
-            post: action.target.id,
-            targetActor: action.actor.id
-          }
-        }
-      }), {
+      axios.post('graphql/', JSON.stringify({query: query}), {
         withCredentials: true,
         headers: {
           'X-CSRFToken': csrftoken,
@@ -100,9 +112,16 @@ var feed = new Vue({
         }
       }).then(res => {
         console.log(res.data)
+        this.actions = this.actions.concat(res.data.data.actions)
       }).catch(err => console.log(err))
     },
+    onLike (action) {
+      this.createAction(action, 'like')
+    },
     onShare (action) {
+      this.createAction(action, 'share')
+    },
+    createAction (action, verb) {
       var query = `
       mutation actCreate($input:ActionInput){
         createAction(action:$input){
@@ -116,7 +135,7 @@ var feed = new Vue({
         query: query,
         variables: {
           input: {
-            verb: 'share',
+            verb: verb,
             post: action.target.id,
             targetActor: action.actor.id
           }
@@ -131,5 +150,28 @@ var feed = new Vue({
         console.log(res.data)
       }).catch(err => console.log(err))
     }
+  },
+  filters: {
+    ago: function (value) {
+      var timeagoInstance = timeago()
+      return timeagoInstance.format(value)
+    }
+  },
+  mounted () {
+    var vueInstance = this
+    window.addEventListener('scroll', function (e) {
+      var scrollTop = $(document).scrollTop()
+      var bodyheight = $(document).height() - $(window).height()
+      var block_request = false
+      var empty_response = false;   
+      // todo : empty response   
+      if (scrollTop / bodyheight > 0.9 && !block_request && !empty_response) {
+        block_request = true
+        console.log('beforefetch')
+        vueInstance.fetchActions()
+        console.log('fetched')
+        block_request = false
+      }
+    })
   }
 })
