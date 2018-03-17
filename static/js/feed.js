@@ -1,6 +1,7 @@
 var postInput = new Vue({
   el: '#post',
   data: {
+    empty_response: false,
     post_text: '',
     selectedImage: null
   },
@@ -37,7 +38,7 @@ var feed = new Vue({
   created () {
     var query = `
     query getActions{
-      actions(limit:10, offset:0){
+      actions(limit:10, offset:0, isProfile:false){
         id
         verb
         created
@@ -69,9 +70,9 @@ var feed = new Vue({
         'content-type': 'application/json'
       }
     }).then(res => {
-      console.log(res.data)
+      console.log('created: ', res.data)
       this.actions = res.data.data.actions
-    }).catch(err => console.log(err))
+    }).catch(err => console.log('feed created err: ', err))
   },
   methods: {
     fetchActions: function () {
@@ -79,7 +80,7 @@ var feed = new Vue({
       this.limit += 10
       var query = `
       query getActions{
-        actions(limit:${this.limit}, offset:${this.offset}){
+        actions(limit:${this.limit}, offset:${this.offset}, isProfile:false){
           id
           verb
           created
@@ -111,9 +112,13 @@ var feed = new Vue({
           'content-type': 'application/json'
         }
       }).then(res => {
-        console.log(res.data)
+        console.log('fetchActions: ', res.data)
+        if (res.data.data.actions.length === 0) {
+          console.log('empty response')
+          this.empty_response = true
+        }
         this.actions = this.actions.concat(res.data.data.actions)
-      }).catch(err => console.log(err))
+      }).catch(err => console.log('fetchActions err: ', err))
     },
     onLike (action) {
       this.createAction(action, 'like')
@@ -162,10 +167,9 @@ var feed = new Vue({
     window.addEventListener('scroll', function (e) {
       var scrollTop = $(document).scrollTop()
       var bodyheight = $(document).height() - $(window).height()
-      var block_request = false
-      var empty_response = false;   
+      var block_request = false  
       // todo : empty response   
-      if (scrollTop / bodyheight > 0.9 && !block_request && !empty_response) {
+      if (scrollTop / bodyheight > 0.9 && !block_request && !vueInstance.empty_response) {
         block_request = true
         console.log('beforefetch')
         vueInstance.fetchActions()

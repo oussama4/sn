@@ -1,3 +1,5 @@
+from json import loads
+
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -28,8 +30,9 @@ def follow(request):
     """
 
     print('follow user called')
-    followed_id = request.POST['id']
-    action = request.POST['action']
+    payload = loads(request.body)
+    followed_id = payload['id']
+    action = payload['action']
     if followed_id and action:
         try:
             followed = User.objects.get(id=followed_id)

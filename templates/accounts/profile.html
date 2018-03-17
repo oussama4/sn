@@ -1,11 +1,17 @@
-{% extends "../feed/index.html" %}
+{% extends "base.html" %} 
+<!-- TODO: dont't extend from feed page -->
+{% load staticfiles %}
 
 {% block title %}
   Profile
 {% endblock title %}
 
+{% block head %}
+  {% include "../profile_head.html" %}
+{% endblock head %}
+
 {% block body %}
-  <div class="container">
+  <div class="container" id="profile" v-cloak>
     <div class="row mt-4 bg-light">
       <div class="col-xs-3 offset-sm-2 mr-3 mt-2">
           <img src="{{profile_owner.avatar.url}}" 
@@ -24,6 +30,7 @@
           {% if not same_user %}
             <div class="col-sm-2 offset-sm-2 mt-3">
                 <a href="#" class="btn btn-outline-info" id="followBtn"
+                    @click.prevent="onFollow()"
                     data-id="{{profile_owner.id}}"
                     data-action="{% if request.user in profile_owner.followers.all %}un{% endif %}follow"> 
                     {% if request.user in profile_owner.followers.all %}
@@ -52,50 +59,76 @@
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="activity" role="tabpanel" 
-               aria-labelledby="activity-tab">...</div>
-          <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">...</div>
-          <div class="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">...</div>
+          <div class="tab-pane fade show active mt-3" id="activity" role="tabpanel" 
+               aria-labelledby="activity-tab">
+
+               <div v-for="(action,i) in actions" :key="i" class="media border bg-light w-75 p-3 mb-3">
+                <img class="avatar-sm mr-3" :src="/media/ + action.actor.avatar" alt="">
+                <div class="media-body">
+                        <h5 class="text-primary">
+                            <a :href="/profile/ + action.actor.id"> 
+                                [[action.actor.firstName]] [[action.actor.lastName]] 
+                            </a>
+                            <small v-if="action.verb=='like'" class="text-muted">
+                                likes 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                            <small v-if="action.verb=='share'" class="text-muted">
+                                shared 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                            <small class="font-italic text-info"> [[action.created|ago]] </small>
+                        </h5>
+                    <p>
+                        [[action.target.text]]
+                    </p>
+                    <img class="img-fluid" :src="/media/ + action.target.image" 
+                         alt="" v-if="action.target.image">
+                    <div>
+                        <button class="btn btn-outline-info" @click="onLike(action)"> Like </button>
+                        <button class="btn btn-outline-info" @click="onShare(action)"> Share </button>
+                        <button class="btn btn-outline-info"> Comment </button>
+                    </div>
+                </div>
+            </div>
+            
+              </div>
+          <div class="tab-pane fade mt-3" id="followers" role="tabpanel" aria-labelledby="followers-tab">
+            <div v-for="(f,i) in followers" :key="i" class="media mt-3">
+                <img class="avatar-sm mr-3" :src="/media/ + f.avatar" alt="">
+                <div class="media-body">
+                    <h5 class="text-primary">
+                        <a :href="/profile/ + f.id"> 
+                            [[f.firstName]] [[f.lastName]] 
+                        </a>
+                    </h5>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade mt-3" id="following" role="tabpanel" aria-labelledby="following-tab">
+            <div v-for="(f,i) in following" :key="i" class="media mt-3">
+                <img class="avatar-sm mr-3" :src="/media/ + f.avatar" alt="">
+                <div class="media-body">
+                    <h5 class="text-primary">
+                        <a :href="/profile/ + f.id"> 
+                            [[f.firstName]] [[f.lastName]] 
+                        </a>
+                    </h5>
+                </div>
+            </div>
+          </div>
+          </div>
         </div>
 
     </div>
-  </div>
 {% endblock body %}
 
-{% block domready %}
-  var csrftoken = Cookies.get('csrftoken');
-  function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
-  $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-  });
-
-  $('#followBtn').click(function (e) {
-    e.preventDefault();
-    $.post('{% url 'follow_user' %}',
-        {
-          id: $(this).data('id'),
-          action: $(this).data('action')
-        },
-        function (data) {
-          if (data['status'] === 'ok') {
-            var previous_action = $('#followBtn').data('action');
-            
-            // toggle data-action
-            $('#followBtn').data('action',
-            previous_action === 'follow' ? 'unfollow' : 'follow');
-            
-            // toggle link text
-            $('#followBtn').text(
-            previous_action === 'follow' ? 'Unfollow' : 'Follow');
-          }
-          console.log('response: ' + data);
-        });
-  });
-{% endblock domready %}
+{% block scripts %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock scripts %}

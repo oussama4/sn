@@ -36,12 +36,19 @@ class CreateAction(graphene.Mutation):
 class Query(object):
     actions = graphene.List(ActionType,
                             limit=graphene.NonNull(graphene.Int),
-                            offset=graphene.NonNull(graphene.Int))
+                            offset=graphene.NonNull(graphene.Int),
+                            is_profile=graphene.NonNull(graphene.Boolean),
+                            user_id=graphene.Int())
     posts = graphene.List(PostType)
 
     def resolve_actions(self, info, **kwargs):
         limit = kwargs.get('limit')
         offset = kwargs.get('offset')
+        is_profile = kwargs.get('is_profile')
+        if is_profile:
+            user_id = kwargs.get('user_id')
+            return Action.objects.filter(
+                    actor_id=user_id).select_related('actor', 'target')[offset:limit]
         qs = list(info.context.user.is_following.all())
         qs.append(info.context.user)
         return Action.objects.filter(

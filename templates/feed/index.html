@@ -1,23 +1,12 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}
   SocialNet Home
 {% endblock title %}
 
 {% block head %}
-        <ul class="navbar-nav offset-sm-10">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="{{request.user.avatar.url}}" alt="avatar" class="avatar-xs img-fluid">
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a>
-                    {% comment %} <a class="dropdown-item" href="{% url 'settings' request.user.id %}">Settings</a> {% endcomment %}
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-                </div>
-            </li>
-        </ul>
+        {% include "../profile_head.html" %}
 {% endblock head %}
 
 {% block body %}
@@ -78,3 +67,7 @@
         </div>
     </div>
 {% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'js/feed.js' %}"></script>
+{% endblock scripts %}

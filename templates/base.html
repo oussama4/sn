@@ -31,13 +31,9 @@
     <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/axios.min.js' %}"></script>
     <script src="{% static 'js/timeago.min.js' %}"></script>
-    <script src="{% static 'js/feed.js' %}"></script>
-    <script>
-            $(document).ready(function(){
-                {% block domready %}
 
-                {% endblock domready %}
-            });
-    </script>
+    {% block scripts %}
+      
+    {% endblock scripts %}
 </body>
 </html>
