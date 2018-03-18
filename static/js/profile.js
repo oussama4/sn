@@ -182,19 +182,10 @@ var profile = new Vue({
     },
     mounted () {
       var vueInstance = this
-      window.addEventListener('scroll', function (e) {
-        var scrollTop = $(document).scrollTop()
-        var bodyheight = $(document).height() - $(window).height()
-        var block_request = false
-        var empty_response = false;   
-        // todo : empty response   
-        if (scrollTop / bodyheight > 0.9 && !block_request && !empty_response) {
-          block_request = true
-          console.log('beforefetch')
-          vueInstance.fetchActions()
-          console.log('fetched')
-          block_request = false
-        }
+      var monitor = scrollMonitor.create(document.getElementById('profile_buttom'), -300)
+      monitor.enterViewport(function () {
+        console.log('entered viewport')
+        vueInstance.fetchActions()
       })
     }
   })

@@ -1,7 +1,6 @@
 var postInput = new Vue({
   el: '#post',
   data: {
-    empty_response: false,
     post_text: '',
     selectedImage: null
   },
@@ -75,9 +74,15 @@ var feed = new Vue({
     }).catch(err => console.log('feed created err: ', err))
   },
   methods: {
-    fetchActions: function () {
-      this.offset += 10
+    onLike (action) {
+      this.createAction(action, 'like')
+    },
+    onShare (action) {
+      this.createAction(action, 'share')
+    },
+    fetchActions () {
       this.limit += 10
+      this.offset += 10
       var query = `
       query getActions{
         actions(limit:${this.limit}, offset:${this.offset}, isProfile:false){
@@ -115,16 +120,11 @@ var feed = new Vue({
         console.log('fetchActions: ', res.data)
         if (res.data.data.actions.length === 0) {
           console.log('empty response')
-          this.empty_response = true
         }
         this.actions = this.actions.concat(res.data.data.actions)
+        // block_request = false
+        console.log('fetched')
       }).catch(err => console.log('fetchActions err: ', err))
-    },
-    onLike (action) {
-      this.createAction(action, 'like')
-    },
-    onShare (action) {
-      this.createAction(action, 'share')
     },
     createAction (action, verb) {
       var query = `
@@ -164,18 +164,10 @@ var feed = new Vue({
   },
   mounted () {
     var vueInstance = this
-    window.addEventListener('scroll', function (e) {
-      var scrollTop = $(document).scrollTop()
-      var bodyheight = $(document).height() - $(window).height()
-      var block_request = false  
-      // todo : empty response   
-      if (scrollTop / bodyheight > 0.9 && !block_request && !vueInstance.empty_response) {
-        block_request = true
-        console.log('beforefetch')
-        vueInstance.fetchActions()
-        console.log('fetched')
-        block_request = false
-      }
+    var monitor = scrollMonitor.create(document.getElementById('feed_buttom'), -300)
+    monitor.enterViewport(function () {
+      console.log('entered viewport')
+      vueInstance.fetchActions()
     })
   }
 })
