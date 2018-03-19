@@ -1,7 +1,8 @@
 from json import loads
 
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -50,3 +51,8 @@ class SignUp(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'accounts/signup.html'
+
+class UpdateUser(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ['email', 'first_name', 'last_name', 'avatar', 'bio']
+    template_name = 'accounts/settings.html'

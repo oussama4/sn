@@ -7,10 +7,10 @@
 {% block head %}
     <ul class="navbar-nav offset-sm-9">
         <div class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Log in</a>
+            <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
         </div>
         <div class="nav-item">
-            <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+            <a class="nav-link" href="{% url 'accounts:signup' %}">Sign up</a>
         </div>
     </ul>
 {% endblock head %}
