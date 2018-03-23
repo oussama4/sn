@@ -60,8 +60,23 @@
                     <div>
                         <button class="btn btn-outline-info" @click="onLike(action)"> Like </button>
                         <button class="btn btn-outline-info" @click="onShare(action)"> Share </button>
-                        <button class="btn btn-outline-info"> Comment </button>
                     </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" 
+                                 placeholder="Write your comment" 
+                                 @keyup.enter="onComment(action, $event)">
+                        </div>
+                    </div>
+                    <ul class="list-unstyled list-group mt-3">
+                        <li class="media list-group-item d-flex" v-for="(comment,i) in action.comments" :key="i">
+                            <img class="avatar-sm mr-3" :src="/media/ + comment.user.avatar" alt="">
+                            <div class="media-body h6 mt-3">
+                                [[comment.body]]
+                            </div>
+                            <small> [[comment.created|ago]] </small>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

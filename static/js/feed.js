@@ -58,6 +58,17 @@ var feed = new Vue({
           firstName
           lastName
         }
+        comments{
+          id
+          user{
+            id
+            avatar
+            firstName
+            lastName
+          }
+          body
+          created
+        }
       }
     }
     `
@@ -79,6 +90,33 @@ var feed = new Vue({
     },
     onShare (action) {
       this.createAction(action, 'share')
+    },
+    onComment (action, event) {
+      var query = `
+      mutation cmtCreate($comment:CommentInput!){
+        createComment(comment:$comment){
+          id
+        }
+      }
+      `
+      var csrftoken = Cookies.get('csrftoken')
+      axios.post('graphql/', JSON.stringify({
+        query: query,
+        variables: {
+          comment: {
+            action: action.id,
+            body: event.target.value,
+          }
+        }
+      }), {
+        withCredentials: true,
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'content-type': 'application/json'
+        }
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => console.log(err))
     },
     fetchActions () {
       this.limit += 10
@@ -105,6 +143,17 @@ var feed = new Vue({
             id
             firstName
             lastName
+          }
+          comments{
+            id
+            user{
+              id
+              avatar
+              firstName
+              lastName
+            }
+            body
+            created
           }
         }
       }
