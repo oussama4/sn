@@ -141,7 +141,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'feed:index'
 LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'feed:index'
 
 AUTH_USER_MODEL = 'accounts.User'
 
