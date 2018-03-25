@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'crispy_forms',
     'accounts.apps.AccountsConfig',
-    'feed.apps.FeedConfig'
+    'feed.apps.FeedConfig',
+    'chat.apps.ChatConfig',
 ]
 
 MIDDLEWARE = [
