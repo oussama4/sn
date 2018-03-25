@@ -38,8 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'channels',
     'graphene_django',
     'crispy_forms',
+    
     'accounts.apps.AccountsConfig',
     'feed.apps.FeedConfig',
     'chat.apps.ChatConfig',
@@ -148,4 +151,16 @@ AUTH_USER_MODEL = 'accounts.User'
 
 GRAPHENE = {
     'SCHEMA': 'socialdj.schema.schema'
+}
+
+# Channels
+ASGI_APPLICATION = 'socialdj.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
