@@ -18,7 +18,7 @@
                 </a>
                 <div class="list-group mt-5">
                     {% for room in rooms %}
-                      <a href="" class="list-group-item">
+                      <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1"> {{ room.name }} </h5>
                             <small class="text-muted"> 
@@ -26,7 +26,7 @@
                             </small>
                         </div>
                         <p class="mb-1"> {{ room.description }} </p>
-                        <small class="text-muted"> {{ room.created|date:"D d M Y" }} </small>
+                        <small class="text-muted"> Created: {{ room.created|date:"D d M Y" }} </small>
                       </a>
                     {% empty %}
                       <p class="h3"> There's no chat rooms yet ! </p>

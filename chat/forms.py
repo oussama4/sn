@@ -6,3 +6,4 @@ class RoomForm(ModelForm):
     class Meta:
         model = Room
         fields = ('name', 'description', 'public')
+        
