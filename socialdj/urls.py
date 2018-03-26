@@ -26,6 +26,7 @@ admin.site.site_title = _('SocialDJ site admin')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('chat/', include('chat.urls', namespace='chat')),
     path('', include('accounts.urls', namespace='accounts')),
     path('', include('feed.urls', namespace='feed')),
 ]
