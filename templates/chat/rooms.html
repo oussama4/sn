@@ -18,7 +18,8 @@
                 </a>
                 <div class="list-group mt-5">
                     {% for room in rooms %}
-                      <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
+                      <a href="{% url 'chat:room_detail' room.id %}" 
+                         class="list-group-item list-group-item-action flex-column align-items-start mb-1">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1"> {{ room.name }} </h5>
                             <small class="text-muted"> 

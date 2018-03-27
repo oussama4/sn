@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock styles %}
+
+{% block title %}
+  SocialNet Chat - {{ object.name }} room
+{% endblock title %}
+
+{% block head %}
+        {% include "../profile_head.html" %}
+{% endblock head %}
+
+{% block body %}
+  <div container>
+    <div class="row mt-5">
+      <div class="col-sm-8 offset-sm-2">
+        <ul class="list-unstyled chat-body border rounded">
+          {% for message in messages %}
+            <li class="media">
+              <img src="{{message.author.avatar.url}}" alt="">
+              <div class="media-body">
+                <a href="{% url 'accounts:profile' message.author.id %}">
+                  <h5 class="text-primary"> {{ message.author.get_full_name }} </h5>
+                </a>
+                {{ message.body }}
+                <small class="text-muted"> {{ message.created|date:"D d M Y" }} </small>
+              </div>
+            </li>
+          {% empty %}
+            empty
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="row fixed-bottom">
+      <div class="col-sm-8 offset-sm-2">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Type your message here" 
+                 aria-label="Type your message here" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

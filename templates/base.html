@@ -10,6 +10,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block styles %}
+      
+    {% endblock styles %}
     <title> {% block title %} SocialNet {% endblock title %} </title>
 </head>
 <body>

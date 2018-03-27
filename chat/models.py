@@ -14,7 +14,7 @@ class Room(models.Model):
         related_name='rooms')
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
-    public = models.BooleanField()
+    public = models.BooleanField(default=True)
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -27,6 +27,8 @@ class Message(models.Model):
 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         related_name='chat_messages')
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages',
+        null=True, blank=True)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
