@@ -177,7 +177,7 @@ var feed = new Vue({
     },
     createAction (action, verb) {
       var query = `
-      mutation actCreate($input:ActionInput){
+      mutation actCreate($input:ActionInput!){
         createAction(action:$input){
           id
           verb
