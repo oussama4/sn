@@ -35,6 +35,9 @@ class Message(models.Model):
     def __str__(self):
         return self.body[:10] + ' ...'
 
+    class Meta:
+        ordering = ('created',)
+
 @receiver(post_save, sender=Room)
 def post_save_room_receiver(sender, instance, created, **kwargs):
     if created:

@@ -14,7 +14,6 @@ class MessageType(DjangoObjectType):
 class Query(object):
     rooms = graphene.List(RoomType)
     messages = graphene.List(MessageType,
-                             user=graphene.NonNull(graphene.Int),
                              room=graphene.NonNull(graphene.Int),
                              limit=graphene.NonNull(graphene.Int),
                              offset=graphene.NonNull(graphene.Int))
@@ -23,12 +22,11 @@ class Query(object):
         return Room.objects.all()
 
     def resolve_messages(self, info, **kwargs):
-        user_id = kwargs.get('user')
+        #user_id = kwargs.get('user')
         room_id = kwargs.get('room')
         limit = kwargs.get('limit')
         offset = kwargs.get('offset')
 
         return Message.objects.filter(
-                author_id=user_id,
                 room_id=room_id
                 ).select_related('author', 'room')[offset:limit]

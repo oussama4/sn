@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from .sync_to_async import get_room_or_error, get_user_or_error, save_message
@@ -9,8 +10,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         room_id = self.scope['url_route']['kwargs']['pk']
-        room_name = await get_room_or_error(room_id)
-        await self.channel_layer.group_add(room_name, self.channel_name)
+        print ('room id : ' + str(room_id))
+        room = await get_room_or_error(room_id)
+        await self.channel_layer.group_add(room.name, self.channel_name)
+        print('connection established')
         await self.accept()
 
     async def disconnect(self, code):
@@ -29,6 +32,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_send(
             room.name, 
             {
+            'type': 'chat_message',
             'room': room_id,
             'user': user_id,
             'message': msg
@@ -40,8 +44,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         called when a message is to room group
         """
 
-        self.send_json({
+        print('message: ' + event['message'])
+        await self.send_json({
             'room': event['room'],
             'user': event['user'],
-            'message': event['message']
+            'message': event['message'],
+            'created': str(now())
         })

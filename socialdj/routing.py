@@ -7,7 +7,7 @@ from chat.consumers import ChatConsumer
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(
         URLRouter([
-            path('chat/rooms/<str:room_name>/', ChatConsumer)
+            path('chat/rooms/<int:pk>/', ChatConsumer)
         ])
     )
 })

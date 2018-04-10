@@ -10,7 +10,7 @@ def get_room_or_error (room_id):
 
 @database_sync_to_async
 def get_user_or_error(user_id):
-    user = User.objects.get(ok=user_id)
+    user = User.objects.get(pk=user_id)
     return user
 
 @database_sync_to_async
