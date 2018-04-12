@@ -53,7 +53,7 @@ var chat = new Vue({
           }`
 
           var csrftoken = Cookies.get('csrftoken')
-            axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({query: query}), {
+            axios.post(window.location.origin + '/graphql/', JSON.stringify({query: query}), {
             withCredentials: true,
             headers: {
                 'X-CSRFToken': csrftoken,
@@ -91,7 +91,7 @@ var chat = new Vue({
                 }
               }`
             var csrftoken = Cookies.get('csrftoken')
-            axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({query: query}), {
+            axios.post(window.location.origin + '/graphql/', JSON.stringify({query: query}), {
             withCredentials: true,
             headers: {
                 'X-CSRFToken': csrftoken,

@@ -62,7 +62,7 @@ var profile = new Vue({
       }
       `
       var csrftoken = Cookies.get('csrftoken')
-      axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({query: query}), {
+      axios.post(window.location.origin + '/graphql/', JSON.stringify({query: query}), {
         withCredentials: true,
         headers: {
           'X-CSRFToken': csrftoken,
@@ -84,7 +84,7 @@ var profile = new Vue({
           action: btn.getAttribute('data-action')
         }
         console.log('payload: ', payload)
-        axios.post('http://127.0.0.1:8000/follow_user',
+        axios.post(window.location.origin + '/follow_user',
           JSON.stringify({
             id: btn.getAttribute('data-id'),
             action: btn.getAttribute('data-action')
@@ -149,7 +149,8 @@ var profile = new Vue({
         }
         `
         var csrftoken = Cookies.get('csrftoken')
-        axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({query: query}), {
+        console.log('host: ' + window.location.host)
+        axios.post(window.location.origin + '/graphql/', JSON.stringify({query: query}), {
           withCredentials: true,
           headers: {
             'X-CSRFToken': csrftoken,
@@ -175,7 +176,8 @@ var profile = new Vue({
         }
         `
         var csrftoken = Cookies.get('csrftoken')
-        axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({
+        
+        axios.post(window.location.origin + '/graphql/', JSON.stringify({
           query: query,
           variables: {
             comment: {
@@ -203,7 +205,7 @@ var profile = new Vue({
         }
         `
         var csrftoken = Cookies.get('csrftoken')
-        axios.post('http://127.0.0.1:8000/graphql/', JSON.stringify({
+        axios.post(window.location.origin + '/graphql/', JSON.stringify({
           query: query,
           variables: {
             input: {
