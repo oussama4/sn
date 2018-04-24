@@ -12,5 +12,6 @@ graphene-django = "*"
 channels = "*"
 channels-redis = "*"
 django-cors-headers = "*"
+djangorestframework = "*"
 
 [dev-packages]

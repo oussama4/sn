@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
     'channels',
     'graphene_django',
     'crispy_forms',
@@ -167,6 +168,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-#CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 #CORS_ALLOW_CREDENTIALS = True
 #CSRF_TRUSTED_ORIGINS = ['.ngrok.io', 'http://7add70ed.ngrok.io/']

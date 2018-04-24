@@ -1,15 +1,21 @@
 from json import loads
 
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import CreateView, UpdateView
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.views import View
+from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
 
-from .forms import UserCreationForm
-from .models import User
+from .serializers import RegisterSerializer
+from .models import User, OfpptID
+from .validators import valid_password
 
 @login_required
 def profile(request, pk):
@@ -46,11 +52,20 @@ def follow(request):
             return JsonResponse({'status': 'ko'})
     return JsonResponse({'status': 'ko'})
 
+@method_decorator(csrf_exempt, name='dispatch')
+class SignUp(APIView):
+    """
+    a view to handle user registration requests
+    """
 
-class SignUp(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('accounts:login')
-    template_name = 'accounts/signup.html'
+    def post(self, request):
+        data = loads(request.body)
+        serializer = RegisterSerializer(data=data)
+        if not serializer.is_valid():
+            return JsonResponse({'errored': True, 'errors': serializer.errors})
+        serializer.create(serializer.validated_data)
+        return JsonResponse({'errored': False, 'errors': None})
+    
 
 class UpdateUser(LoginRequiredMixin, UpdateView):
     model = User

@@ -5,6 +5,10 @@ from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
 
+class OfpptID(models.Model):
+    mat = models.CharField(_('ofppt ID'), unique=True, max_length=20)
+    verified = models.BooleanField(default=False)
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -64,6 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name='is_following', blank=True)
     avatar = models.ImageField(upload_to='avatars/%Y/%m/%d', default='avatars/default/download.jpeg')
     bio = models.TextField(blank=True)
+    ofppt = models.OneToOneField(OfpptID, null=True, blank=True, on_delete=models.CASCADE)
 
     objects = UserManager()
 
