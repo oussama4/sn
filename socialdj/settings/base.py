@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from urllib.parse import urlparse
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir))))
@@ -39,11 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'corsheaders',
     'rest_framework',
     'channels',
     'graphene_django',
-    'crispy_forms',
-    'corsheaders',
     
     'accounts.apps.AccountsConfig',
     'feed.apps.FeedConfig',
@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'graphql_jwt.middleware.JSONWebTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -117,6 +118,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# auth
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -168,6 +176,8 @@ CHANNEL_LAYERS = {
     },
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ALLOW_CREDENTIALS = True
-#CSRF_TRUSTED_ORIGINS = ['.ngrok.io', 'http://7add70ed.ngrok.io/']
+# jwt
+
+GRAPHQL_JWT = {
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
+}

@@ -15,7 +15,6 @@ from rest_framework.views import APIView
 
 from .serializers import RegisterSerializer
 from .models import User, OfpptID
-from .validators import valid_password
 
 @login_required
 def profile(request, pk):

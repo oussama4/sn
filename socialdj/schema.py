@@ -7,7 +7,7 @@ import chat.schema as cch
 class Query(fch.Query, ach.Query, cch.Query, graphene.ObjectType):
     pass
 
-class Mutation(fch.Mutation, graphene.ObjectType):
+class Mutation(fch.Mutation, ach.Mutation, graphene.ObjectType):
     pass
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

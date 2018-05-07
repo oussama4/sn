@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
 
 admin.site.site_header = _('SocialDJ Administration')
@@ -25,7 +26,7 @@ admin.site.site_title = _('SocialDJ site admin')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path('chat/', include('chat.urls', namespace='chat')),
     path('', include('accounts.urls', namespace='accounts')),
     path('', include('feed.urls', namespace='feed')),
