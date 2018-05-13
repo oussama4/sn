@@ -1,12 +1,26 @@
+from datetime import datetime, timedelta
+
 import graphene
-import graphql_jwt
 from graphene_django.types import DjangoObjectType
+from django.conf import settings
+from django.contrib.auth import authenticate
+import jwt
 
 from .models import User, OfpptID
 
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+
+class LoginInput(graphene.InputObjectType):
+    email = graphene.String()
+    password = graphene.String()
+
+class LoginOutput(graphene.ObjectType):
+    errored = graphene.Boolean()
+    errors = graphene.String()
+    user = graphene.Field(UserType)
+    token = graphene.String()
 
 class Query(object):
     users = graphene.List(UserType)
@@ -20,14 +34,32 @@ class Query(object):
         user_id = kwargs.get('user_id')
         return User.objects.get(pk=user_id)
 
-class Login(graphql_jwt.JSONWebTokenMutation):
-    user = graphene.Field(UserType)
+class Login(graphene.Mutation):
+    class Arguments:
+        input = graphene.NonNull(LoginInput)
 
-    @classmethod
-    def resolve(cls, root, info):
-        return cls(user=info.context.user)
+    output = graphene.Field(LoginOutput)
+
+    def mutate(self, info, input):
+        u = authenticate(info.context, username=input.email, password=input.password)
+        if u is None:
+            out = LoginOutput(errored=True,
+                              errors='invalid credencials',
+                              user=None,
+                              token='')
+            return Login(output=out)
+        else:
+            tk = jwt.encode({
+                        'id': u.id,
+                        'exp': datetime.utcnow() + timedelta(days=1)
+                    },
+                    settings.SECRET_KEY,
+                    algorithm='HS256')
+            out = LoginOutput(errored=False,
+                              errors='',
+                              user=u,
+                              token=tk)
+            return Login(output=out)
 
 class Mutation(graphene.ObjectType):
     token_auth = Login.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()

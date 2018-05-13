@@ -14,5 +14,6 @@ channels-redis = "*"
 django-cors-headers = "*"
 djangorestframework = "*"
 django-graphql-jwt = "*"
+pyjwt = "*"
 
 [dev-packages]

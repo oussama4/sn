@@ -57,7 +57,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    #'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    'accounts.middleware.JwtMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -121,7 +122,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # auth
 
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
+    'accounts.backend.JwtBackend',
+    #'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -179,5 +181,7 @@ CHANNEL_LAYERS = {
 # jwt
 
 GRAPHQL_JWT = {
+    'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': timedelta(days=1),
+    'JWT_PAYLOAD_HANDLER': 'accounts.utils.f',
 }
