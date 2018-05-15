@@ -22,6 +22,12 @@ class ActionInput(graphene.InputObjectType):
     post = graphene.Int()
     target_actor = graphene.Int()
 
+class ActionsInput(graphene.InputObjectType):
+    limit=graphene.NonNull(graphene.Int)
+    offset=graphene.NonNull(graphene.Int)
+    is_profile=graphene.NonNull(graphene.Boolean)
+    user_id=graphene.Int()
+
 class CommentInput(graphene.InputObjectType):
     action = graphene.Int()
     body = graphene.String()
@@ -55,19 +61,16 @@ class CreateComment(graphene.Mutation):
 
 class Query(object):
     actions = graphene.List(ActionType,
-                            limit=graphene.NonNull(graphene.Int),
-                            offset=graphene.NonNull(graphene.Int),
-                            is_profile=graphene.NonNull(graphene.Boolean),
-                            user_id=graphene.Int())
+                            input=graphene.NonNull(ActionsInput))
     posts = graphene.List(PostType)
     comments = graphene.List(CommentType)
 
-    def resolve_actions(self, info, **kwargs):
-        limit = kwargs.get('limit')
-        offset = kwargs.get('offset')
-        is_profile = kwargs.get('is_profile')
+    def resolve_actions(self, info, input):
+        limit = input.limit
+        offset = input.offset
+        is_profile = input.is_profile
         if is_profile:
-            user_id = kwargs.get('user_id')
+            user_id = input.user_id
             return Action.objects.filter(
                     actor_id=user_id
                     ).prefetch_related('comments').select_related('actor', 'target')[offset:limit]

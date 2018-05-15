@@ -6,12 +6,17 @@ import jwt
 
 class JwtMiddleware(MiddlewareMixin):
     def process_request(self, request):
+        print('\n\n\n JWT middleware \n\n\n')
+        #if request.path == '/graphql/':
+         #   return
         token = get_auth_token(request)
+        print('token: ', token.__str__)
         if token is not None:
             if not hasattr(request, 'user') or request.user.is_anonymous:
                 try:
-                    dec = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-                except jwt.exceptions.InvalidTokenError:
+                    dec = jwt.decode(str(token), settings.SECRET_KEY, algorithms=['HS256'])
+                except jwt.exceptions.InvalidTokenError as ex:
+                    print(ex)
                     return JsonResponse({
                         'auth_error': 'invalid token'
                     })

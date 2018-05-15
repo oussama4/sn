@@ -26,6 +26,8 @@ class Query(object):
     users = graphene.List(UserType)
     user = graphene.Field(UserType,
                           user_id=graphene.NonNull(graphene.Int))
+    userByToken = graphene.Field(UserType,
+                                 token=graphene.NonNull(graphene.String))
 
     def resolve_users(self, info, **kwargs):
         return User.objects.all()
@@ -33,6 +35,9 @@ class Query(object):
     def resolve_user(self, info, **kwargs):
         user_id = kwargs.get('user_id')
         return User.objects.get(pk=user_id)
+
+    def resolve_userByToken(self, info, **kwargs):
+        return info.context.user
 
 class Login(graphene.Mutation):
     class Arguments:
@@ -54,7 +59,7 @@ class Login(graphene.Mutation):
                         'exp': datetime.utcnow() + timedelta(days=1)
                     },
                     settings.SECRET_KEY,
-                    algorithm='HS256')
+                    algorithm='HS256').decode()
             out = LoginOutput(errored=False,
                               errors='',
                               user=u,
