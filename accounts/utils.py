@@ -1,13 +1,21 @@
-from graphql_jwt.utils import jwt_payload
+from django.conf import settings
+from django.contrib.auth import get_user_model
+import jwt
 
-def f(user, context):
-    print('callllllllllllllllllledddddddddddd')
-    payload = jwt_payload(user)
-    payload['id'] = user.pk
-    payload['first_name'] = user.first_name
-    payload['last_name'] = user.last_name
-    payload['avatar'] = user.avatar
+def get_user_by_token(token):
+    if token is not None:
+        try:
+            dec = jwt.decode(str(token), settings.SECRET_KEY, algorithms=['HS256'])
+        except jwt.exceptions.InvalidTokenError as ex:
+            return None
+        else:
+            User = get_user_model()
+            return User.objects.get(pk=dec.get('id'))
+    else:
+        return None
 
-    print('callllllllllllllllllled')
-
-    return payload
+def get_auth_token(request):
+    header = request.META.get('HTTP_AUTHORIZATION', '').split()
+    if len(header) != 2:
+        return None
+    return header[1]

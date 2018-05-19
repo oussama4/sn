@@ -58,9 +58,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    'accounts.middleware.JwtMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'accounts.middleware.JwtMiddleware',
 ]
 
 ROOT_URLCONF = 'socialdj.urls'

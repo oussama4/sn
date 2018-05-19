@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 import jwt
 
 from .models import User, OfpptID
+from .utils import get_auth_token, get_user_by_token
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -37,7 +38,9 @@ class Query(object):
         return User.objects.get(pk=user_id)
 
     def resolve_userByToken(self, info, **kwargs):
-        return info.context.user
+        token = get_auth_token(info.context)
+        return get_user_by_token(token)
+        
 
 class Login(graphene.Mutation):
     class Arguments:

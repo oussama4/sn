@@ -23,6 +23,10 @@ class JwtMiddleware(MiddlewareMixin):
                 else:
                     User = get_user_model()
                     request.user = User.objects.get(pk=dec.get('id'))
+                    print(request.user.email)
+            else:
+                print('notttt')
+                print(request.user)
 
 def get_auth_token(request):
     header = request.META.get('HTTP_AUTHORIZATION', '').split()
