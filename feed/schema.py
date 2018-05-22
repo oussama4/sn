@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from feed.models import Action, Post, Comment
 from accounts.models import User
+from accounts.utils import get_auth_token, get_user_by_token
 
 class ActionType(DjangoObjectType):
     class Meta:
@@ -69,13 +70,15 @@ class Query(object):
         limit = input.limit
         offset = input.offset
         is_profile = input.is_profile
+        token = get_auth_token(info.context)
+        u = get_user_by_token(token)
         if is_profile:
             user_id = input.user_id
             return Action.objects.filter(
                     actor_id=user_id
                     ).prefetch_related('comments').select_related('actor', 'target')[offset:limit]
-        qs = list(info.context.user.is_following.all())
-        qs.append(info.context.user)
+        qs = list(u.is_following.all())
+        qs.append(u)
         return Action.objects.filter(
                     actor__in=qs
                     ).prefetch_related('comments').select_related('actor', 'target')[offset:limit]
