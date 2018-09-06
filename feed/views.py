@@ -4,6 +4,9 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.db import DatabaseError, transaction
 from django.contrib.contenttypes.models import ContentType
+from django.views.generic.list import ListView
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from .models import Action, Post
 
@@ -53,3 +56,12 @@ def post_action(request):
             return JsonResponse({'status': 'error'})
     
     return JsonResponse({'status': 'ok'})
+
+class SearchView(ListView):
+    template_name = 'search.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        q = self.request.GET.get('q')
+        User = get_user_model()
+        return User.objects.filter(Q(first_name__icontains=q) | Q(last_name__icontains=q))
