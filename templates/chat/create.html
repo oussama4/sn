@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  SocialNet Chat
+{% endblock title %}
+
+{% block head %}
+        {% include "../profile_head.html" %}
+{% endblock head %}
+
+{% block body %}
+  <div class="container">
+      <form method="post">
+          {{form|crispy}}
+          {% csrf_token %}
+          <input type="submit" class="btn btn-success" value="Create">
+      </form>
+  </div>
+{% endblock body %}

@@ -1,0 +1,22 @@
+<div class="collapse navbar-collapse">
+    <form class="form-inline my-2 my-lg-0" method="GET" action="/search">
+        <input class="form-control mr-sm-2" type="text" name="q" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    
+    <ul class="navbar-nav offset-sm-8">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="{{request.user.avatar.url}}" alt="avatar" class="avatar-xs img-fluid">
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'accounts:profile' request.user.id %}">Profile</a>
+                <a class="dropdown-item" href="{% url 'accounts:update_user' request.user.id %}">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'chat:chatrooms' %}">Chat</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+            </div>
+        </li>
+    </ul>
+</div>

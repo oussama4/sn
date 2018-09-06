@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock styles %}
+
+{% block title %}
+  SocialNet Chat - {{ object.name }} room
+{% endblock title %}
+
+{% block head %}
+        {% include "../profile_head.html" %}
+{% endblock head %}
+
+{% block body %}
+  <div container id="app">
+    <div class="row mt-5 mb-2">
+      <div class="col-sm-8 offset-sm-2">
+        <ul class="list-unstyled chat-body border rounded" v-cloak>
+            <li v-for="(message,i) in messages" :key="i" class="media border mb-3">
+              <img class="avatar-sm mr-3" :src="/media/ + message.author.avatar" alt="">
+              <div class="media-body">
+                <h6 class="text-primary">
+                  <a :href="/profile/ + message.author.id">
+                    [[ message.author.firstName ]] [[ message.author.lastName ]]
+                  </a>
+                  <small class="text-muted"> [[ message.created|ago ]] </small>
+                </h6>
+                [[ message.body ]]
+              </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row fixed-bottom">
+      <div class="col-sm-8 offset-sm-2">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Type your message here" 
+                 aria-label="Type your message here" 
+                 aria-describedby="basic-addon2" v-model="msg">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" 
+                    type="button" @click="onSend">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="user_data" data-userid="{{request.user.id}}"></div>
+  </div>
+{% endblock body %}
+
+{% block scripts %}
+  <script src="{% static 'js/chat.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+  SocialNet Home
+{% endblock title %}
+
+{% block head %}
+        {% include "../profile_head.html" %}
+{% endblock head %}
+
+{% block body %}
+    <div class="container">
+        <div class="row" id="post">
+            <form class="sticky-top col-xs-6 offset-sm-3">
+                <textarea id="post_t" cols="50" rows="3" class="form-control mt-4" 
+                          placeholder="what do you want to say?" v-model="post_text"></textarea>
+                <div class="row mt-1">
+                    <div class="col">
+                        <label for="post_i" class="btn btn-outline-info">Select an image...</label>
+                        <input type="file" accept=".jpg, .jpeg, .png" @change="onFileChanged"
+                               class="input-file" name="post_image" id="post_i">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-outline-info btn-block" @click.prevent="onUpload"> Post </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="feed" class="offset-sm-3" v-cloak>
+            <div v-for="(action,i) in actions" :key="i" class="media border bg-light w-75 p-3 mb-3">
+                <img class="avatar-sm mr-3" :src="/media/ + action.actor.avatar" alt="">
+                <div class="media-body">
+                        <h5 class="text-primary">
+                            <a :href="/profile/ + action.actor.id"> 
+                                [[action.actor.firstName]] [[action.actor.lastName]] 
+                            </a>
+                            <small v-if="action.verb=='like'" class="text-muted">
+                                likes 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                            <small v-if="action.verb=='share'" class="text-muted">
+                                shared 
+                                <a :href="/profile/ + action.targetActor.id"> 
+                                    [[action.targetActor.firstName]] [[action.targetActor.lastName]] 
+                                </a>
+                                post
+                            </small>
+                            <small class="font-italic text-info"> [[action.created|ago]] </small>
+                        </h5>
+                    <p>
+                        [[action.target.text]]
+                    </p>
+                    <img class="img-fluid" :src="/media/ + action.target.image" 
+                         alt="" v-if="action.target.image">
+                    <div>
+                        <button class="btn btn-outline-info" @click="onLike(action)"> Like </button>
+                        <button class="btn btn-outline-info" @click="onShare(action)"> Share </button>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                          <input type="text" class="form-control" 
+                                 placeholder="Write your comment" 
+                                 @keyup.enter="onComment(action, $event)">
+                        </div>
+                    </div>
+                    <ul class="list-unstyled list-group mt-3">
+                        <li class="media list-group-item d-flex" v-for="(comment,i) in action.comments" :key="i">
+                            <img class="avatar-sm mr-3" :src="/media/ + comment.user.avatar" alt="">
+                            <div class="media-body h6 mt-3">
+                                [[comment.body]]
+                            </div>
+                            <small> [[comment.created|ago]] </small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="feed_buttom" style="height:400px"></div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'js/feed.js' %}"></script>
+{% endblock scripts %}

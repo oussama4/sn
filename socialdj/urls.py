@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.utils.translation import gettext_lazy as _
+from graphene_django.views import GraphQLView
+
+admin.site.site_header = _('SocialDJ Administration')
+admin.site.site_title = _('SocialDJ site admin')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('chat/', include('chat.urls', namespace='chat')),
+    path('', include('accounts.urls', namespace='accounts')),
+    path('', include('feed.urls', namespace='feed')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

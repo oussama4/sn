@@ -1,0 +1,35 @@
+.bg {
+    background-image: url("../img/pexels-photo-207896.jpeg");
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: cover;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+}
+
+.avatar-sm {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.avatar-xs {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.input-file {
+    opacity: 0;
+}
+
+[v-cloak] {
+    display: none;
+}

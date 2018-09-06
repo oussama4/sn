@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+  SocialNet Search
+{% endblock title %}
+
+{% block head %}
+        {% include "./profile_head.html" %}
+{% endblock head %}
+
+{% block body %}
+
+  <div class="container">
+    <div class="mt-5 mb-5 h3"> Found {{ users.count }} result{{users.count|pluralize}} </div>
+    <div class="list-group">
+  {% for u in users %}
+    <a href="{% url 'accounts:profile' u.id %}" class="list-group-item d-flex w-100">
+      <img src="{{ u.avatar.url }}" alt="" class="avatar-sm mr-3">
+      <p class="h5"> {{u.first_name}} {{u.last_name}} </p>
+    </a>
+  {% endfor %}
+  </div>
+  </div>
+
+{% endblock body %}
