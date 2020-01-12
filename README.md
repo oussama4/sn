@@ -1,0 +1,1 @@
+A simple social network project for the purpose of  practicing django and web development in general
