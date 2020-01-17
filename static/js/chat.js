@@ -1,8 +1,3 @@
-/* var path = window.location.pathname.split('/')
-var socket = new WebSocket(
-        'ws://localhost' + window.location.host + 
-        'chat/rooms/' + path[path.length -2]) */
-
 var chat = new Vue({
     delimiters: ["[[", "]]"],
     el: '#app',
@@ -35,7 +30,6 @@ var chat = new Vue({
         var path = window.location.pathname.split('/')
         this.room = path[path.length -2]
         this.user = document.querySelector('#user_data').getAttribute('data-userid')
-        console.log(this.user)
         var query = `query getMsgs {
             messages(room: ${this.room}, limit: ${this.limit}, offset: ${this.offset}) {
               author {
@@ -60,8 +54,7 @@ var chat = new Vue({
                 'content-type': 'application/json'
             }
             }).then(res => {
-            console.log('created: ', res.data)
-            this.messages = res.data.data.messages
+                this.messages = res.data.data.messages
             }).catch(err => console.log('chat created err: ', err))
     },
     mounted: function () {
