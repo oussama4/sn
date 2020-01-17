@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'crispy_forms',
     'corsheaders',
+    'debug_toolbar',
     
     'accounts.apps.AccountsConfig',
     'feed.apps.FeedConfig',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'socialdj.urls'
@@ -167,6 +169,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-#CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ALLOW_CREDENTIALS = True
-#CSRF_TRUSTED_ORIGINS = ['.ngrok.io', 'http://7add70ed.ngrok.io/']
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

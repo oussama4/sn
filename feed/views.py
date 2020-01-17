@@ -22,7 +22,6 @@ def post_action(request):
     """
     handles a request to post to the news feed
     """
-    print('post_actionnnnnnnnnnnnnnnnnnnn')
     
     if (not request.POST['post_text']) and (not request.FILES):
         return JsonResponse({'status': 'empty'})

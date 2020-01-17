@@ -11,7 +11,6 @@ var profile = new Vue({
     },
     created () {
       this.user_id = window.location.pathname.substring(9, window.location.pathname.length-1)
-      // console.log('pathname: ', window.location.pathname.substring(9, window.location.pathname.length-1))// bad idea
       var query = `
       query getActions{
         actions(limit:10, offset:0, isProfile:true, userId:${this.user_id}){
