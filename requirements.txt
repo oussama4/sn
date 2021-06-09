@@ -1,6 +1,6 @@
 python-dotenv==0.10.3
 psycopg2==2.8.4
-Pillow==8.1.1
+Pillow==8.2.0
 graphene-django==2.8.0
 Django==2.2.21
 django-cors-headers==3.2.1
